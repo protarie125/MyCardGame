@@ -60,12 +60,12 @@ class OriginalSolar(cards.Character):
 
 # follower #
 class NewRecruits(cards.Follower):
-    def __init__(self, ft, ft2, ft_numeric_large,
+    def __init__(self, ft, ft_numeric_large,
                  img_card_frame_s, img_card_frame_l,
                  img_card_s, img_card_l):
         cards.Follower.__init__(self, 'ORG002', 'Knights of Consecration',
                                 lang.CARD_NAME_NEW_RECRUITS, lang.CARD_TEXT_NEW_RECRUITS,
-                                ft, ft2, ft_numeric_large,
+                                ft, ft_numeric_large,
                                 1, 2, 0, 10,
                                 img_card_frame_s, img_card_frame_l,
                                 img_card_s, img_card_l)
@@ -74,12 +74,12 @@ class NewRecruits(cards.Follower):
 
 
 class BraveLittleKnight(cards.Follower):
-    def __init__(self, ft, ft2, ft_numeric_large,
+    def __init__(self, ft, ft_numeric_large,
                  img_card_frame_s, img_card_frame_l,
                  img_card_s, img_card_l):
         cards.Follower.__init__(self, 'ORG003', 'Knights of Consecration',
                                 lang.CARD_NAME_BRAVE_LITTLE_KNIGHT, lang.CARD_TEXT_BRAVE_LITTLE_KNIGHT,
-                                ft, ft2, ft_numeric_large,
+                                ft, ft_numeric_large,
                                 2, 4, 1, 6,
                                 img_card_frame_s, img_card_frame_l,
                                 img_card_s, img_card_l)

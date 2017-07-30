@@ -271,6 +271,7 @@ def very_start(field_slots, char_slot, hand_slots, op_field_slots, op_char_slot,
         btn_shuffle.draw(display_surf)
         btn_menu.draw(display_surf)
 
+        # draw the coin
         if 0 < coin.time < 90:
             coin.draw(display_surf)
         elif coin.time < -30:
@@ -298,9 +299,7 @@ def main():
     nanum_barun_gothic = os.path.join('cardgame//locals//font', 'NanumBarunGothic.ttf')
     ft_fs_size = pygame.font.Font(nanum_barun_gothic, 40)
     ft_btn_l = pygame.font.Font(nanum_barun_gothic, 23)
-    ft_numeric_s = pygame.font.Font(nanum_barun_gothic, 14)
-    ft_numeric_s_b = pygame.font.Font(nanum_barun_gothic, 16)
-    ft_numeric_s_b.set_bold(True)
+    ft_numeric_s = pygame.font.Font(nanum_barun_gothic, 15)
     ft_numeric_l = pygame.font.Font(nanum_barun_gothic, 27)
     ft_numeric_v = pygame.font.Font(nanum_barun_gothic, 35)
 
@@ -314,7 +313,7 @@ def main():
     # locals #
     bg_color = cnst.black
     empty_card = cards.Card('DUMMY_EMPTY', '', 'DUMMY_EMPTY', '', 'dummy',
-                            ft_numeric_s, ft_numeric_s_b,
+                            ft_numeric_s,
                             img_card_frame_s, img_card_frame_l,
                             None, None)
 
@@ -355,24 +354,24 @@ def main():
     # make deck1
     deck1 = deck_mod.Deck()
     for i in range(3):
-        deck1.card_list.append(org_koc_cards.NewRecruits(ft_numeric_s, ft_numeric_s_b, ft_numeric_l,
+        deck1.card_list.append(org_koc_cards.NewRecruits(ft_numeric_s, ft_numeric_l,
                                                          img_card_frame_s, img_card_frame_l,
                                                          img_missing_s, img_missing_l))
     for i in range(3):
-        deck1.card_list.append(org_koc_cards.BraveLittleKnight(ft_numeric_s, ft_numeric_s_b, ft_numeric_l,
+        deck1.card_list.append(org_koc_cards.BraveLittleKnight(ft_numeric_s, ft_numeric_l,
                                                                img_card_frame_s, img_card_frame_l,
                                                                img_missing_s, img_missing_l))
     for n in range(24):
         if n % 3 == 1:
-            deck1.card_list.append(cards.TheTester(ft_numeric_s, ft_numeric_s_b, ft_numeric_l,
+            deck1.card_list.append(cards.TheTester(ft_numeric_s, ft_numeric_l,
                                                    img_card_frame_s, img_card_frame_l,
                                                    img_the_tester_s, img_the_tester_l))
         elif n % 3 == 0:
-            deck1.card_list.append(cards.TheVanilla(ft_numeric_s, ft_numeric_s_b, ft_numeric_l,
+            deck1.card_list.append(cards.TheVanilla(ft_numeric_s, ft_numeric_l,
                                                     img_card_frame_s, img_card_frame_l,
                                                     img_the_vanilla_s, img_the_vanilla_l))
         else:
-            deck1.card_list.append(cards.SimpleBuff(ft_numeric_s, ft_numeric_s_b, ft_numeric_l,
+            deck1.card_list.append(cards.SimpleBuff(ft_numeric_s, ft_numeric_l,
                                                     img_card_frame_s, img_card_frame_l,
                                                     img_simple_buff_s, img_simple_buff_l))
     random.shuffle(deck1.card_list)
@@ -380,11 +379,11 @@ def main():
     deck2 = deck_mod.Deck()
     for n in range(30):
         if n % 2 == 0:
-            deck2.card_list.append(cards.TheTester(ft_numeric_s, ft_numeric_s_b, ft_numeric_l,
+            deck2.card_list.append(cards.TheTester(ft_numeric_s, ft_numeric_l,
                                                    img_card_frame_s, img_card_frame_l,
                                                    img_the_tester_s, img_the_tester_l))
         else:
-            deck2.card_list.append(cards.TheVanilla(ft_numeric_s, ft_numeric_s_b, ft_numeric_l,
+            deck2.card_list.append(cards.TheVanilla(ft_numeric_s, ft_numeric_l,
                                                     img_card_frame_s, img_card_frame_l,
                                                     img_the_vanilla_s, img_the_vanilla_l))
 

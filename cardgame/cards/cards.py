@@ -13,6 +13,7 @@ from cardgame.cards import skills as skl
 import random
 from cardgame.locals import constants as cnst
 from cardgame.locals import buttons as btns
+from cardgame.locals import ft_print as ftp
 
 
 ###########
@@ -20,7 +21,7 @@ from cardgame.locals import buttons as btns
 ###########
 class Card:
     def __init__(self, cid, region, name, text, ctype,
-                 ft, ft2,
+                 ft,
                  img_card_frame_s, img_card_frame_l,
                  img_card_s, img_card_l):
         self.cid = cid
@@ -41,7 +42,6 @@ class Card:
         self.img_card_l = img_card_l
 
         self.ft = ft
-        self.ft2 = ft2
 
         self.selected = False
 
@@ -69,11 +69,7 @@ class Card:
         card_name_rect.center = self.card_name_rect_g.center
         display.blit(card_name_surf, card_name_rect)
 
-        text_surf = self.ft.render("%s" % self.text, True, cnst.white)
-        text_rect = text_surf.get_rect()
-        text_rect.left = self.text_rect_g.left + 5
-        text_rect.top = self.text_rect_g.top
-        display.blit(text_surf, text_rect)
+        ftp.multi_render(display, self.ft, self.text)
 
     def check_clicked(self, mx, my):
         return self.rect.collidepoint(mx, my)
@@ -84,12 +80,12 @@ class Card:
 
 class Follower(Card):
     def __init__(self, cid, region, name, text,
-                 ft, ft2, ft_numeric_large,
+                 ft, ft_numeric_large,
                  size, ap, dp, hp,
                  img_card_frame_s, img_card_frame_l,
                  img_card_s, img_card_l):
         Card.__init__(self, cid, region, name, text, 'follower',
-                      ft, ft2,
+                      ft,
                       img_card_frame_s, img_card_frame_l,
                       img_card_s, img_card_l)
         self.ft_numeric_large = ft_numeric_large
@@ -114,27 +110,6 @@ class Follower(Card):
         self.hp_rect_g = pygame.Rect(0, 0, int(self.rect.width / 3), 30)
         self.hp_rect_g.bottomright = self.rect.bottomright
 
-        self.ap_surf = self.ft.render("%d" % self.ap, True, cnst.white)
-        self.ap_surf_b = self.ft2.render("%d" % self.ap, True, cnst.black)
-        self.ap_rect = self.ap_surf.get_rect()
-        self.ap_rect.center = self.ap_rect_g.center
-        self.ap_rect_b = self.ap_surf_b.get_rect()
-        self.ap_rect_b.center = self.ap_rect_g.center
-
-        self.dp_surf = self.ft.render("%d" % self.dp, True, cnst.white)
-        self.dp_surf_b = self.ft2.render("%d" % self.dp, True, cnst.black)
-        self.dp_rect = self.dp_surf.get_rect()
-        self.dp_rect.center = self.dp_rect_g.center
-        self.dp_rect_b = self.dp_surf_b.get_rect()
-        self.dp_rect_b.center = self.dp_rect_g.center
-
-        self.hp_surf = self.ft.render("%d" % self.hp, True, cnst.white)
-        self.hp_surf_b = self.ft2.render("%d" % self.hp, True, cnst.black)
-        self.hp_rect = self.hp_surf.get_rect()
-        self.hp_rect.center = self.hp_rect_g.center
-        self.hp_rect_b = self.hp_surf_b.get_rect()
-        self.hp_rect_b.center = self.hp_rect_g.center
-
         self.when_attack_skills = []
         self.when_defence_skills = []
 
@@ -149,58 +124,27 @@ class Follower(Card):
         self.dp_rect_g.midbottom = self.rect.midbottom
         self.hp_rect_g.bottomright = self.rect.bottomright
 
-        self.ap_rect.center = self.ap_rect_g.center
-        self.ap_rect_b.center = self.ap_rect_g.center
-        self.dp_rect.center = self.dp_rect_g.center
-        self.dp_rect_b.center = self.dp_rect_g.center
-        self.hp_rect.center = self.hp_rect_g.center
-        self.hp_rect_b.center = self.hp_rect_g.center
-
     def set_size(self, size):
         self.size = size
-        self.size_surf = self.ft_numeric_large.render("%d" % self.size, True, cnst.white)
-        self.size_rect = self.size_surf.get_rect()
-        self.size_rect.center = self.size_rect_g.center
 
     def set_ap(self, ap):
         self.ap = ap
-        self.ap_surf = self.ft.render("%d" % self.ap, True, cnst.white)
-        self.ap_surf_b = self.ft2.render("%d" % self.ap, True, cnst.black)
-        self.ap_rect = self.ap_surf.get_rect()
-        self.ap_rect.center = self.ap_rect_g.center
-        self.ap_rect_b = self.ap_surf_b.get_rect()
-        self.ap_rect_b.center = self.ap_rect_g.center
 
     def set_dp(self, dp):
         self.dp = dp
-        self.dp_surf = self.ft.render("%d" % self.dp, True, cnst.white)
-        self.dp_surf_b = self.ft2.render("%d" % self.dp, True, cnst.black)
-        self.dp_rect = self.dp_surf.get_rect()
-        self.dp_rect.center = self.dp_rect_g.center
-        self.dp_rect_b = self.dp_surf_b.get_rect()
-        self.dp_rect_b.center = self.dp_rect_g.center
 
     def set_hp(self, hp):
         self.hp = hp
-        self.hp_surf = self.ft.render("%d" % self.hp, True, cnst.white)
-        self.hp_surf_b = self.ft2.render("%d" % self.hp, True, cnst.black)
-        self.hp_rect = self.hp_surf.get_rect()
-        self.hp_rect.center = self.hp_rect_g.center
-        self.hp_rect_b = self.hp_surf_b.get_rect()
-        self.hp_rect_b.center = self.hp_rect_g.center
 
     def draw(self, display):
         Card.draw(self, display)
 
         pygame.draw.circle(display, cnst.blue, self.size_rect_g.center, self.size_radius)
-        display.blit(self.size_surf, self.size_rect)
+        ftp.outlined_render(display, self.ft_numeric_large, repr(self.size), cnst.white, cnst.black, self.size_rect_g)
 
-        display.blit(self.ap_surf_b, self.ap_rect)
-        display.blit(self.dp_surf_b, self.dp_rect)
-        display.blit(self.hp_surf_b, self.hp_rect)
-        display.blit(self.ap_surf, self.ap_rect)
-        display.blit(self.dp_surf, self.dp_rect)
-        display.blit(self.hp_surf, self.hp_rect)
+        ftp.outlined_render(display, self.ft, repr(self.ap), cnst.white, cnst.black, self.ap_rect_g)
+        ftp.outlined_render(display, self.ft, repr(self.dp), cnst.white, cnst.black, self.dp_rect_g)
+        ftp.outlined_render(display, self.ft, repr(self.hp), cnst.white, cnst.black, self.hp_rect_g)
 
     def attack(self, target):
         for skill in self.when_attack_skills:
@@ -216,12 +160,12 @@ class Follower(Card):
 
 class Spell(Card):
     def __init__(self, cid, region, name, text,
-                 ft, ft2, ft_numeric_large,
+                 ft, ft_numeric_large,
                  size,
                  img_card_frame_s, img_card_frame_l,
                  img_card_s, img_card_l):
         Card.__init__(self, cid, region, name, text, 'spell',
-                      ft, ft2,
+                      ft,
                       img_card_frame_s, img_card_frame_l,
                       img_card_s, img_card_l)
         self.ft_numeric_large = ft_numeric_large
@@ -232,28 +176,19 @@ class Spell(Card):
         self.size_rect_g = pygame.Rect(0, 0, 2 * self.size_radius, 2 * self.size_radius)
         self.size_rect_g.topright = self.rect.topright
 
-        self.size_surf = self.ft_numeric_large.render("%d" % self.size, True, cnst.white)
-        self.size_rect = self.size_surf.get_rect()
-        self.size_rect.center = self.size_rect_g.center
-
     def set_rect(self, rect):
         Card.set_rect(self, rect)
 
         self.size_rect_g.topright = self.rect.topright
 
-        self.size_rect.center = self.size_rect_g.center
-
     def set_size(self, size):
         self.size = size
-        self.size_surf = self.ft_numeric_large.render("%d" % self.size, True, cnst.white)
-        self.size_rect = self.size_surf.get_rect()
-        self.size_rect.center = self.size_rect_g.center
 
     def draw(self, display):
         Card.draw(self, display)
 
         pygame.draw.circle(display, cnst.blue, self.size_rect_g.center, self.size_radius)
-        display.blit(self.size_surf, self.size_rect)
+        ftp.outlined_render(display, self.ft_numeric_large, repr(self.size), cnst.white, cnst.black, self.size_rect_g)
 
     def effect(self, you):
         pass
@@ -261,20 +196,19 @@ class Spell(Card):
 
 class Character(Card):
     def __init__(self, cid, region, name, text,
-                 ft, ft2,
+                 ft, ft_life,
                  img_card_frame_s, img_card_frame_l,
                  img_card_s, img_card_l,
                  life):
         Card.__init__(self, cid, region, name, text, 'character',
-                      ft, ft2,
+                      ft,
                       img_card_frame_s, img_card_frame_l,
                       img_card_s, img_card_l)
 
+        self.ft_life = ft_life
+
         self.life = life
         self.life_rect_g = pygame.Rect(0, 0, 40, 30)
-        self.life_surf = self.ft2.render('%d' % self.life, True, cnst.violet)
-        self.life_rect = self.life_surf.get_rect()
-        self.life_rect.center = self.life_rect_g.center
 
         self.skills = []
 
@@ -283,30 +217,25 @@ class Character(Card):
 
         self.life_rect_g.bottomright = self.rect.bottomright
 
-        self.life_rect.center = self.life_rect_g.center
-
     def set_life(self, life):
         self.life = life
-        self.life_surf = self.ft2.render('%d' % self.life, True, cnst.violet)
-        self.life_rect = self.life_surf.get_rect()
-        self.life_rect.center = self.life_rect_g.center
 
     def draw(self, display):
         Card.draw(self, display)
 
-        display.blit(self.life_surf, self.life_rect)
+        ftp.outlined_render(display, self.ft_life, repr(self.life), cnst.violet, cnst.white, self.life_rect_g)
 
     def effect(self, you):
         pass
 
 
 class TheTester(Follower):
-    def __init__(self, ft, ft2, ft_numeric_large,
+    def __init__(self, ft, ft_numeric_large,
                  img_card_frame_s, img_card_frame_l,
                  img_card_s, img_card_l):
         Follower.__init__(self, 'TST001', 'test',
                           'CARD_NAME_THE_TESTER', 'CARD_TEXT_THE_TESTER',
-                          ft, ft2, ft_numeric_large,
+                          ft, ft_numeric_large,
                           4, 5, 1, 7,
                           img_card_frame_s, img_card_frame_l,
                           img_card_s, img_card_l)
@@ -316,12 +245,12 @@ class TheTester(Follower):
 
 
 class TheVanilla(Follower):
-    def __init__(self, ft, ft2, ft_numeric_large,
+    def __init__(self, ft, ft_numeric_large,
                  img_card_frame_s, img_card_frame_l,
                  img_card_s, img_card_l):
         Follower.__init__(self, 'TST002', 'test',
                           'CARD_NAME_THE_VANILLA', 'CARD_TEXT_THE_VANILLA',
-                          ft, ft2, ft_numeric_large,
+                          ft, ft_numeric_large,
                           3, 4, 0, 12,
                           img_card_frame_s, img_card_frame_l,
                           img_card_s, img_card_l)
@@ -331,12 +260,12 @@ class TheVanilla(Follower):
 
 
 class SimpleBuff(Spell):
-    def __init__(self, ft, ft2, ft_numeric_large,
+    def __init__(self, ft, ft_numeric_large,
                  img_card_frame_s, img_card_frame_l,
                  img_card_s, img_card_l):
         Spell.__init__(self, 'TEST003', 'test',
                        'CARD_NAME_SIMPLE_BUFF', 'CARD_TEXT_SIMPLE_BUFF',
-                       ft, ft2, ft_numeric_large,
+                       ft, ft_numeric_large,
                        3,
                        img_card_frame_s, img_card_frame_l,
                        img_card_s, img_card_l)
