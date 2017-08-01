@@ -66,6 +66,10 @@ text_box_rect_g.bottom = window_y - 30
 coin_flip_pos = (int((window_x - card_l_x - right_field_border_rect.width) / 2), int(10 + 1.5 * card_s_y))
 coin_flip_radius = 100
 
+stat_bar_y = window_y - card_s_y - 20
+rect_your_deck_left = pygame.Rect(0, 0, 100, 30)
+rect_your_deck_left.bottom = stat_bar_y
+
 # mouse
 mouse_x = 0
 mouse_y = 0
@@ -92,6 +96,9 @@ ph_end = 'end'
 # others
 first_now = None
 very_first = True
+battle_first_determined = False
+battle_first = None
+order_determined = False
 
 ########
 # test #

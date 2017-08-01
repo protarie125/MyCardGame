@@ -110,8 +110,11 @@ class Player:
         self.hand_slot = hand_slot
         self.field_slot = field_slot
         self.char_slot = char_slot
+        self.grave = []
 
         self.fs_size = 0
+
+        self.drew = False
 
     def set_op(self, op):
         self.op = op
@@ -183,6 +186,7 @@ def main():
     # fonts
     pygame.font.init()
     nanum_barun_gothic = os.path.join('cardgame//locals//font', 'NanumBarunGothic.ttf')
+    ft_stat = pygame.font.Font(nanum_barun_gothic, 30)
     ft_fs_size = pygame.font.Font(nanum_barun_gothic, 40)
     ft_btn_l = pygame.font.Font(nanum_barun_gothic, 23)
     ft_numeric_s = pygame.font.Font(nanum_barun_gothic, 15)
@@ -284,14 +288,15 @@ def main():
     btn_menu = btns.Button(cnst.menu_button_rect, ft_btn_l, 'MENU')
 
     btn_turn_end.available = False
-    btn_shuffle.available = True
-    btn_menu.available = True
+    btn_shuffle.available = False
+    btn_menu.available = False
 
     coin = CoinFlip(120)
 
     cnst.first_now = None
 
-    the_game = itf.Interface(you, opponent, empty_card, coin, display_surf, bg_color, ft_fs_size,
+    the_game = itf.Interface(you, opponent, empty_card, coin, display_surf, bg_color,
+                             ft_stat, ft_fs_size,
                              btn_turn_end, btn_shuffle, btn_menu)
     # main game loop #
     while True:
