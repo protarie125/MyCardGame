@@ -69,6 +69,7 @@ coin_flip_radius = 100
 # mouse
 mouse_x = 0
 mouse_y = 0
+m_left = 1
 
 # colors
 white = (255, 255, 255, 255)
@@ -80,6 +81,13 @@ blue = (20, 70, 200, 255)
 violet = (230, 50, 210, 255)
 coin_red = (241, 115, 172, 200)
 coin_blue = (0, 192, 243, 200)
+
+# phase
+ph_very_start = 'very_start'
+ph_start = 'start'
+ph_main = 'main'
+ph_battle = 'battle'
+ph_end = 'end'
 
 # others
 first_now = None

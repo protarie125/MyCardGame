@@ -24,9 +24,17 @@ class Skill:
         self.img = img
 
 
+class StartSkill(Skill):
+    def __init__(self, mother):
+        Skill.__init__(self, mother, 'img_start')
+
+    def activate(self):
+        pass
+
+
 class AtkSkill(Skill):
     def __init__(self, mother):
-        Skill.__init__(self, mother, 'attack')
+        Skill.__init__(self, mother, 'img_attack')
 
     def activate(self, target):
         pass
@@ -34,7 +42,7 @@ class AtkSkill(Skill):
 
 class DefSkill(Skill):
     def __init__(self, mother):
-        Skill.__init__(self, mother, 'defence')
+        Skill.__init__(self, mother, 'img_defence')
 
     def activate(self):
         pass

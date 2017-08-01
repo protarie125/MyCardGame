@@ -47,6 +47,10 @@ class Card:
 
         self.use_button = btns.CardUseButton(cnst.use_button_rect.copy(), self)
 
+        self.when_start_skills = []
+        self.when_attack_skills = []
+        self.when_defence_skills = []
+
     def set_rect(self, rect):
         self.rect = rect
 
@@ -109,9 +113,6 @@ class Follower(Card):
         self.dp_rect_g.midbottom = self.rect.midbottom
         self.hp_rect_g = pygame.Rect(0, 0, int(self.rect.width / 3), 30)
         self.hp_rect_g.bottomright = self.rect.bottomright
-
-        self.when_attack_skills = []
-        self.when_defence_skills = []
 
     def set_rect(self, rect):
         Card.set_rect(self, rect)

@@ -18,6 +18,7 @@ from cardgame.cards import org_koc_cards
 from cardgame.cards import deck_mod
 from cardgame.locals import constants as cnst
 from cardgame.locals import buttons as btns
+from cardgame.interface import interface as itf
 
 
 ###########
@@ -159,25 +160,6 @@ def terminate():
     sys.exit()
 
 
-def get_card_can_see(fs, chs, hs, opfs, opchs):
-    ccs = []
-
-    for f in fs:
-        ccs.append(f.card)
-
-    ccs.append(chs.card)
-
-    for h in hs:
-        ccs.append(h.card)
-
-    for opf in opfs:
-        ccs.append(opf.card)
-
-    ccs.append(opchs.card)
-
-    return ccs
-
-
 def set_up_card_img(file):
     img = pygame.image.load(os.path.join('cardgame//locals', file))
     img_surf = img.convert_alpha()
@@ -187,108 +169,12 @@ def set_up_card_img(file):
     return img_s, img_l
 
 
-def shuffle_hand(you, empty_card):
-    for h in you.hand_slot:
-        you.deck.card_list.append(h.card)
-        h.card = empty_card
-        random.shuffle(you.deck.card_list)
-
-
-def very_start(field_slots, char_slot, hand_slots, op_field_slots, op_char_slot,
-               coin, empty_card, you, display_surf, bg_color,
-               ft_fs_size, btn_turn_end, btn_shuffle, btn_menu):
-    # 게임이 시작되면, 캐릭터 스킬을 사용할 순서를 정한다. #
-    # main loop #
-    # 마우스 사용 금지
-    while cnst.very_first:
-        # event handling loop #
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                terminate()
-            elif event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    terminate()
-
-        # game logic #
-        cards_can_see = get_card_can_see(field_slots, char_slot, hand_slots, op_field_slots, op_char_slot)
-
-        # 카드 사용 금지
-        for c in cards_can_see:
-            c.use_button.available = False
-
-        for fs in field_slots:
-            fs.card.set_rect(fs.rect.copy())
-
-        # 코인 플립으로 선/후공 결정
-        if cnst.first_now != 'you' and cnst.first_now != 'opponent':
-            who_first = random.randint(0, 2)
-            if who_first == 0:
-                cnst.first_now = 'you'
-            else:
-                cnst.first_now = 'opponent'
-
-        # coin update
-        if cnst.first_now == 'you':
-            coin.set_color(cnst.coin_red)
-        elif cnst.first_now == 'opponent':
-            coin.set_color(cnst.coin_blue)
-        coin.dec_time()
-
-        you.set_fs_size(empty_card)
-
-        # draw game #
-        display_surf.fill(bg_color)
-
-        pygame.draw.rect(display_surf, cnst.white, cnst.right_field_border_rect)
-
-        for fs in field_slots:
-            fs.draw(display_surf)
-            if not fs.card == empty_card:
-                fs.card.draw(display_surf)
-
-        for opfs in op_field_slots:
-            opfs.draw(display_surf)
-
-        char_slot.draw(display_surf)
-        char_slot.card.draw(display_surf)
-
-        op_char_slot.draw(display_surf)
-        op_char_slot.card.draw(display_surf)
-
-        for hs in hand_slots:
-            hs.draw(display_surf)
-            if not hs.card == empty_card:
-                hs.card.draw(display_surf)
-
-        pygame.draw.rect(display_surf, cnst.green, cnst.card_name_rect_g, 1)
-        pygame.draw.rect(display_surf, cnst.green, cnst.text_box_rect_g, 1)
-
-        pygame.draw.rect(display_surf, cnst.gray, cnst.img_l_rect)
-
-        you.draw_fs_size(display_surf, ft_fs_size)
-
-        btn_turn_end.draw(display_surf)
-        btn_shuffle.draw(display_surf)
-        btn_menu.draw(display_surf)
-
-        # draw the coin
-        if 0 < coin.time < 90:
-            coin.draw(display_surf)
-        elif coin.time < -30:
-            cnst.very_first = False
-
-        # update #
-        pygame.display.update()
-        cnst.fps_clock.tick(cnst.fps)
-
-
 #################
 # main function #
 #################
 def main():
     # set up #
     pygame.init()
-    m_left = 1
 
     # display
     display_surf = pygame.display.set_mode((cnst.window_x, cnst.window_y))
@@ -393,12 +279,6 @@ def main():
     you.set_op(opponent)
     opponent.set_op(you)
 
-    selected_card = empty_card
-
-    cards_can_see = []
-
-    use_btns = []
-
     btn_turn_end = btns.Button(cnst.turn_end_button_rect, ft_btn_l, 'TURN END')
     btn_shuffle = btns.Button(cnst.shuffle_button_rect, ft_btn_l, 'SHUFFLE')
     btn_menu = btns.Button(cnst.menu_button_rect, ft_btn_l, 'MENU')
@@ -411,6 +291,8 @@ def main():
 
     cnst.first_now = None
 
+    the_game = itf.Interface(you, opponent, empty_card, coin, display_surf, bg_color, ft_fs_size,
+                             btn_turn_end, btn_shuffle, btn_menu)
     # main game loop #
     while True:
         # event handling loop #
@@ -420,121 +302,9 @@ def main():
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     terminate()
-            elif event.type == MOUSEMOTION:
-                (cnst.mouse_x, cnst.mouse_y) = pygame.mouse.get_pos()
-            elif event.type == MOUSEBUTTONUP and event.button == m_left:
-                (cnst.mouse_x, cnst.mouse_y) = pygame.mouse.get_pos()
-                for b in use_btns:
-                    b.check_mouse_over(cnst.mouse_x, cnst.mouse_y)
-                    if b.available and b.mouse_over:
-                        for hs in hand_slots:
-                            if not hs.card == empty_card:
-                                if hs.card == b.mother:
-                                    for fs in field_slots:
-                                        if fs.card == empty_card:
-                                            if you.fs_size + hs.card.size <= 10:
-                                                fs.card = b.mother
-                                                hs.card = empty_card
-                                                use_btns.remove(b)
-                                                break
-                if btn_shuffle.available:
-                    if btn_shuffle.rect.collidepoint(cnst.mouse_x, cnst.mouse_y):
-                        shuffle_hand(you, empty_card)
 
-                for fs in field_slots:
-                    if fs.card.rect.collidepoint(cnst.mouse_x, cnst.mouse_y):
-                        if fs.card.ctype == 'spell':
-                            fs.card.effect(you)
-            elif event.type == MOUSEBUTTONDOWN and event.button == m_left:
-                (cnst.mouse_x, cnst.mouse_y) = pygame.mouse.get_pos()
-                for c in cards_can_see:
-                    if not c == empty_card:
-                        if c.check_clicked(cnst.mouse_x, cnst.mouse_y):
-                            selected_card = c
-
-        # game logic #
-        cards_can_see = get_card_can_see(field_slots, char_slot, hand_slots, op_field_slots, op_char_slot)
-
-        for c in cards_can_see:
-            c.use_button.available = False
-
-        for fs in field_slots:
-            fs.card.set_rect(fs.rect.copy())
-
-        # 게임 개시 루프
-        if cnst.very_first:
-            very_start(field_slots, char_slot, hand_slots, op_field_slots, op_char_slot,
-                       coin, empty_card, you, display_surf, bg_color,
-                       ft_fs_size, btn_turn_end, btn_shuffle, btn_menu)
-
-        # 스타트 페이즈 루프
-        if cnst.first_now == 'you':
-            char_slot.card.effect(you)
-            op_char_slot.card.effect(opponent)
-        elif cnst.first_now == 'opponent':
-            op_char_slot.card.effect(opponent)
-            char_slot.card.effect(you)
-
-        # 메인 페이즈 루프
-        # 배틀 페이즈 루프
-        # 클린업
-
-        for hs in hand_slots:
-            if hs.card == empty_card:
-                new_draw = deck1.card_list[-1]
-                new_draw.set_rect(hs.rect.copy())
-                new_deck = deck1.card_list[:-1]
-
-                hs.card = new_draw
-                use_btns.append(new_draw.use_button)
-                deck1.card_list = new_deck
-
-        you.set_fs_size(empty_card)
-
-        # draw game #
-        display_surf.fill(bg_color)
-
-        pygame.draw.rect(display_surf, cnst.white, cnst.right_field_border_rect)
-
-        for fs in field_slots:
-            fs.draw(display_surf)
-            if not fs.card == empty_card:
-                fs.card.draw(display_surf)
-
-        for opfs in op_field_slots:
-            opfs.draw(display_surf)
-
-        char_slot.draw(display_surf)
-        char_slot.card.draw(display_surf)
-
-        op_char_slot.draw(display_surf)
-        op_char_slot.card.draw(display_surf)
-
-        for hs in hand_slots:
-            hs.draw(display_surf)
-            if not hs.card == empty_card:
-                hs.card.draw(display_surf)
-
-        pygame.draw.rect(display_surf, cnst.green, cnst.card_name_rect_g, 1)
-        pygame.draw.rect(display_surf, cnst.green, cnst.text_box_rect_g, 1)
-
-        pygame.draw.rect(display_surf, cnst.gray, cnst.img_l_rect)
-
-        if not selected_card == empty_card:
-            selected_card.selected_draw(display_surf)
-
-            for h in hand_slots:
-                if selected_card == h.card:
-                    h.card.use_button.available = True
-                    h.card.use_button.draw(display_surf)
-
-        you.draw_fs_size(display_surf, ft_fs_size)
-
-        btn_turn_end.draw(display_surf)
-        btn_shuffle.draw(display_surf)
-        btn_menu.draw(display_surf)
-
-        coin.draw(display_surf)
+        # run game
+        the_game.run()
 
         # update #
         pygame.display.update()
