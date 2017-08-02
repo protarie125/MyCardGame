@@ -20,7 +20,7 @@ from cardgame.locals import ft_print as ftp
 # classes #
 ###########
 class Card:
-    def __init__(self, cid, region, name, text, ctype,
+    def __init__(self, cid, region, name, text, ctype, control,
                  ft,
                  img_card_frame_s, img_card_frame_l,
                  img_card_s, img_card_l):
@@ -29,6 +29,7 @@ class Card:
         self.name = name
         self.text = text
         self.ctype = ctype
+        self.control = control
 
         self.size = 0
 
@@ -83,12 +84,12 @@ class Card:
 
 
 class Follower(Card):
-    def __init__(self, cid, region, name, text,
+    def __init__(self, cid, region, name, text, control,
                  ft, ft_numeric_large,
                  size, ap, dp, hp,
                  img_card_frame_s, img_card_frame_l,
                  img_card_s, img_card_l):
-        Card.__init__(self, cid, region, name, text, 'follower',
+        Card.__init__(self, cid, region, name, text, 'follower', control,
                       ft,
                       img_card_frame_s, img_card_frame_l,
                       img_card_s, img_card_l)
@@ -160,12 +161,12 @@ class Follower(Card):
 
 
 class Spell(Card):
-    def __init__(self, cid, region, name, text,
+    def __init__(self, cid, region, name, text, control,
                  ft, ft_numeric_large,
                  size,
                  img_card_frame_s, img_card_frame_l,
                  img_card_s, img_card_l):
-        Card.__init__(self, cid, region, name, text, 'spell',
+        Card.__init__(self, cid, region, name, text, 'spell', control,
                       ft,
                       img_card_frame_s, img_card_frame_l,
                       img_card_s, img_card_l)
@@ -196,12 +197,12 @@ class Spell(Card):
 
 
 class Character(Card):
-    def __init__(self, cid, region, name, text,
+    def __init__(self, cid, region, name, text, control,
                  ft, ft_life,
                  img_card_frame_s, img_card_frame_l,
                  img_card_s, img_card_l,
                  life):
-        Card.__init__(self, cid, region, name, text, 'character',
+        Card.__init__(self, cid, region, name, text, 'character', control,
                       ft,
                       img_card_frame_s, img_card_frame_l,
                       img_card_s, img_card_l)
@@ -210,8 +211,6 @@ class Character(Card):
 
         self.life = life
         self.life_rect_g = pygame.Rect(0, 0, 40, 30)
-
-        self.skills = []
 
     def set_rect(self, rect):
         Card.set_rect(self, rect)
@@ -231,11 +230,12 @@ class Character(Card):
 
 
 class TheTester(Follower):
-    def __init__(self, ft, ft_numeric_large,
+    def __init__(self,  control,
+                 ft, ft_numeric_large,
                  img_card_frame_s, img_card_frame_l,
                  img_card_s, img_card_l):
         Follower.__init__(self, 'TST001', 'test',
-                          'CARD_NAME_THE_TESTER', 'CARD_TEXT_THE_TESTER',
+                          'CARD_NAME_THE_TESTER', 'CARD_TEXT_THE_TESTER', control,
                           ft, ft_numeric_large,
                           4, 5, 1, 7,
                           img_card_frame_s, img_card_frame_l,
@@ -246,11 +246,12 @@ class TheTester(Follower):
 
 
 class TheVanilla(Follower):
-    def __init__(self, ft, ft_numeric_large,
+    def __init__(self,  control,
+                 ft, ft_numeric_large,
                  img_card_frame_s, img_card_frame_l,
                  img_card_s, img_card_l):
         Follower.__init__(self, 'TST002', 'test',
-                          'CARD_NAME_THE_VANILLA', 'CARD_TEXT_THE_VANILLA',
+                          'CARD_NAME_THE_VANILLA', 'CARD_TEXT_THE_VANILLA', control,
                           ft, ft_numeric_large,
                           3, 4, 0, 12,
                           img_card_frame_s, img_card_frame_l,
@@ -261,11 +262,12 @@ class TheVanilla(Follower):
 
 
 class SimpleBuff(Spell):
-    def __init__(self, ft, ft_numeric_large,
+    def __init__(self,  control,
+                 ft, ft_numeric_large,
                  img_card_frame_s, img_card_frame_l,
                  img_card_s, img_card_l):
         Spell.__init__(self, 'TEST003', 'test',
-                       'CARD_NAME_SIMPLE_BUFF', 'CARD_TEXT_SIMPLE_BUFF',
+                       'CARD_NAME_SIMPLE_BUFF', 'CARD_TEXT_SIMPLE_BUFF', control,
                        ft, ft_numeric_large,
                        3,
                        img_card_frame_s, img_card_frame_l,

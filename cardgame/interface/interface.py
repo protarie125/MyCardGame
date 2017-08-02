@@ -419,83 +419,83 @@ class Interface:
             # end 카드 발동 순서 결정 #
 
             # begin 순서대로 발동 #
-            while len(self.y_order) > 0 or len(self.o_order) > 0:
-                # you first
-                if cnst.battle_first == 'you':
-                    # you
-                    if len(self.y_order) > 0:
-                        na = self.you.field_slot[self.y_order[0]].card
-                        if na.ctype == 'follower':
-                            target = self.get_random_target(self.opponent.field_slot)
-                            if not target == self.empty_card:
-                                na.attack(target)
-                                self.go_to_grave()
-                            else:
-                                new_life = self.opponent.char_slot.card.life - na.size
-                                self.opponent.char_slot.card.set_life(new_life)
-                        elif na.ctype == 'spell':
-                            na.effect(self.you)
-                            self.you.grave.append(na)
-                            self.you.field_slot[self.y_order[0]].card = self.empty_card
+            # you first
+            if cnst.battle_first == 'you':
+                # you
+                if len(self.y_order) > 0:
+                    na = self.you.field_slot[self.y_order[0]].card
+                    if na.ctype == 'follower':
+                        target = self.get_random_target(self.opponent.field_slot)
+                        if not target == self.empty_card:
+                            na.attack(target)
                             self.go_to_grave()
-                        self.y_order = self.y_order[1:]
-                    # then opponent
-                    if len(self.o_order) > 0:
-                        na = self.opponent.field_slot[self.o_order[0]].card
-                        if na.ctype == 'follower':
-                            target = self.get_random_target(self.you.field_slot)
-                            if not target == self.empty_card:
-                                na.attack(target)
-                                self.go_to_grave()
-                            else:
-                                new_life = self.you.char_slot.card.life - na.size
-                                self.you.char_slot.card.set_life(new_life)
-                        elif na.ctype == 'spell':
-                            na.effect(self.opponent)
-                            self.opponent.grave.append(na)
-                            self.opponent.field_slot[self.o_order[0]].card = self.empty_card
+                        else:
+                            new_life = self.opponent.char_slot.card.life - na.size
+                            self.opponent.char_slot.card.set_life(new_life)
+                    elif na.ctype == 'spell':
+                        na.effect(self.you)
+                        self.you.grave.append(na)
+                        self.you.field_slot[self.y_order[0]].card = self.empty_card
+                        self.go_to_grave()
+                    self.y_order = self.y_order[1:]
+                # then opponent
+                if len(self.o_order) > 0:
+                    na = self.opponent.field_slot[self.o_order[0]].card
+                    if na.ctype == 'follower':
+                        target = self.get_random_target(self.you.field_slot)
+                        if not target == self.empty_card:
+                            na.attack(target)
                             self.go_to_grave()
-                        self.o_order = self.o_order[1:]
-                # opponent first
-                elif cnst.battle_first == 'opponent':
-                    # opponent
-                    if len(self.o_order) > 0:
-                        na = self.opponent.field_slot[self.o_order[0]].card
-                        if na.ctype == 'follower':
-                            target = self.get_random_target(self.you.field_slot)
-                            if not target == self.empty_card:
-                                na.attack(target)
-                                self.go_to_grave()
-                            else:
-                                new_life = self.you.char_slot.card.life - na.size
-                                self.you.char_slot.card.set_life(new_life)
-                        elif na.ctype == 'spell':
-                            na.effect(self.opponent)
-                            self.opponent.grave.append(na)
-                            self.opponent.field_slot[self.o_order[0]].card = self.empty_card
+                        else:
+                            new_life = self.you.char_slot.card.life - na.size
+                            self.you.char_slot.card.set_life(new_life)
+                    elif na.ctype == 'spell':
+                        na.effect(self.opponent)
+                        self.opponent.grave.append(na)
+                        self.opponent.field_slot[self.o_order[0]].card = self.empty_card
+                        self.go_to_grave()
+                    self.o_order = self.o_order[1:]
+            # opponent first
+            elif cnst.battle_first == 'opponent':
+                # opponent
+                if len(self.o_order) > 0:
+                    na = self.opponent.field_slot[self.o_order[0]].card
+                    if na.ctype == 'follower':
+                        target = self.get_random_target(self.you.field_slot)
+                        if not target == self.empty_card:
+                            na.attack(target)
                             self.go_to_grave()
-                        self.o_order = self.o_order[1:]
-                    # then you
-                    if len(self.y_order) > 0:
-                        na = self.you.field_slot[self.y_order[0]].card
-                        if na.ctype == 'follower':
-                            target = self.get_random_target(self.opponent.field_slot)
-                            if not target == self.empty_card:
-                                na.attack(target)
-                                self.go_to_grave()
-                            else:
-                                new_life = self.opponent.char_slot.card.life - na.size
-                                self.opponent.char_slot.card.set_life(new_life)
-                        elif na.ctype == 'spell':
-                            na.effect(self.you)
-                            self.you.grave.append(na)
-                            self.you.field_slot[self.y_order[0]].card = self.empty_card
+                        else:
+                            new_life = self.you.char_slot.card.life - na.size
+                            self.you.char_slot.card.set_life(new_life)
+                    elif na.ctype == 'spell':
+                        na.effect(self.opponent)
+                        self.opponent.grave.append(na)
+                        self.opponent.field_slot[self.o_order[0]].card = self.empty_card
+                        self.go_to_grave()
+                    self.o_order = self.o_order[1:]
+                # then you
+                if len(self.y_order) > 0:
+                    na = self.you.field_slot[self.y_order[0]].card
+                    if na.ctype == 'follower':
+                        target = self.get_random_target(self.opponent.field_slot)
+                        if not target == self.empty_card:
+                            na.attack(target)
                             self.go_to_grave()
-                        self.y_order = self.y_order[1:]
+                        else:
+                            new_life = self.opponent.char_slot.card.life - na.size
+                            self.opponent.char_slot.card.set_life(new_life)
+                    elif na.ctype == 'spell':
+                        na.effect(self.you)
+                        self.you.grave.append(na)
+                        self.you.field_slot[self.y_order[0]].card = self.empty_card
+                        self.go_to_grave()
+                    self.y_order = self.y_order[1:]
             # end 순서대로 발동 #
 
             # break loop
-            self.phase = cnst.ph_end
+            if len(self.y_order) == 0 and len(self.o_order) == 0:
+                self.phase = cnst.ph_end
         elif self.phase == cnst.ph_end:
             # disable shuffle button
             self.btn_shuffle.available = False

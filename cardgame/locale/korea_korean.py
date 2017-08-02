@@ -23,6 +23,9 @@ CARD_TEXT_NEW_RECRUITS = u''
 CARD_NAME_BRAVE_LITTLE_KNIGHT = u'용감한 작은 기사단원'
 CARD_TEXT_BRAVE_LITTLE_KNIGHT = u'방어시: 이 추종자의 방어력 +1'
 
+CARD_NAME_RADIANT_SISTER = u'찬란한 수녀'
+CARD_TEXT_RADIANT_SISTER = u'방어시: 이 추종자의 양옆에 있는 추종자들의 공/방 +1/+1'
+
 ########
 # test #
 ########

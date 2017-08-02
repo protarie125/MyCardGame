@@ -104,8 +104,9 @@ class OpCharSlot:
 
 
 class Player:
-    def __init__(self, deck, hand_slot, field_slot, char_slot):
+    def __init__(self, name, deck, hand_slot, field_slot, char_slot):
         self.op = None
+        self.name = name
         self.deck = deck
         self.hand_slot = hand_slot
         self.field_slot = field_slot
@@ -115,6 +116,12 @@ class Player:
         self.fs_size = 0
 
         self.drew = False
+
+    def set_up_player(self, d, h, f, c):
+        self.deck = d
+        self.hand_slot = h
+        self.field_slot = f
+        self.char_slot = c
 
     def set_op(self, op):
         self.op = op
@@ -202,7 +209,7 @@ def main():
 
     # locals #
     bg_color = cnst.black
-    empty_card = cards.Card('DUMMY_EMPTY', '', 'DUMMY_EMPTY', '', 'dummy',
+    empty_card = cards.Card('DUMMY_EMPTY', '', 'DUMMY_EMPTY', '', 'dummy', None,
                             ft_numeric_s,
                             img_card_frame_s, img_card_frame_l,
                             None, None)
@@ -221,14 +228,19 @@ def main():
     for opfs in op_field_slots:
         opfs.set_rect()
 
+    you = Player('You', None, None, None, None)
+    opponent = Player('Opponent', None, None, None, None)
+
     char_slot = CharSlot(empty_card)
-    char_slot.card = org_koc_cards.OriginalSolar(ft_numeric_s, ft_numeric_v,
+    char_slot.card = org_koc_cards.OriginalSolar(you,
+                                                 ft_numeric_s, ft_numeric_v,
                                                  img_card_frame_s, img_card_frame_l,
                                                  img_missing_s, img_missing_l)
     char_slot.card.set_rect(char_slot.rect.copy())
 
     op_char_slot = OpCharSlot(empty_card)
-    op_char_slot.card = org_koc_cards.OriginalSolar(ft_numeric_s, ft_numeric_v,
+    op_char_slot.card = org_koc_cards.OriginalSolar(opponent,
+                                                    ft_numeric_s, ft_numeric_v,
                                                     img_card_frame_s, img_card_frame_l,
                                                     img_missing_s, img_missing_l)
     op_char_slot.card.set_rect(op_char_slot.rect.copy())
@@ -244,24 +256,34 @@ def main():
     # make deck1
     deck1 = deck_mod.Deck()
     for i in range(3):
-        deck1.card_list.append(org_koc_cards.NewRecruits(ft_numeric_s, ft_numeric_l,
+        deck1.card_list.append(org_koc_cards.NewRecruits(you,
+                                                         ft_numeric_s, ft_numeric_l,
                                                          img_card_frame_s, img_card_frame_l,
                                                          img_missing_s, img_missing_l))
     for i in range(3):
-        deck1.card_list.append(org_koc_cards.BraveLittleKnight(ft_numeric_s, ft_numeric_l,
+        deck1.card_list.append(org_koc_cards.BraveLittleKnight(you,
+                                                               ft_numeric_s, ft_numeric_l,
                                                                img_card_frame_s, img_card_frame_l,
                                                                img_missing_s, img_missing_l))
-    for n in range(24):
+    for i in range(3):
+        deck1.card_list.append(org_koc_cards.RadiantSister(you,
+                                                           ft_numeric_s, ft_numeric_l,
+                                                           img_card_frame_s, img_card_frame_l,
+                                                           img_missing_s, img_missing_l))
+    for n in range(21):
         if n % 3 == 1:
-            deck1.card_list.append(cards.TheTester(ft_numeric_s, ft_numeric_l,
+            deck1.card_list.append(cards.TheTester(you,
+                                                   ft_numeric_s, ft_numeric_l,
                                                    img_card_frame_s, img_card_frame_l,
                                                    img_the_tester_s, img_the_tester_l))
         elif n % 3 == 0:
-            deck1.card_list.append(cards.TheVanilla(ft_numeric_s, ft_numeric_l,
+            deck1.card_list.append(cards.TheVanilla(you,
+                                                    ft_numeric_s, ft_numeric_l,
                                                     img_card_frame_s, img_card_frame_l,
                                                     img_the_vanilla_s, img_the_vanilla_l))
         else:
-            deck1.card_list.append(cards.SimpleBuff(ft_numeric_s, ft_numeric_l,
+            deck1.card_list.append(cards.SimpleBuff(you,
+                                                    ft_numeric_s, ft_numeric_l,
                                                     img_card_frame_s, img_card_frame_l,
                                                     img_simple_buff_s, img_simple_buff_l))
     random.shuffle(deck1.card_list)
@@ -269,16 +291,18 @@ def main():
     deck2 = deck_mod.Deck()
     for n in range(30):
         if n % 2 == 0:
-            deck2.card_list.append(cards.TheTester(ft_numeric_s, ft_numeric_l,
+            deck2.card_list.append(cards.TheTester(opponent,
+                                                   ft_numeric_s, ft_numeric_l,
                                                    img_card_frame_s, img_card_frame_l,
                                                    img_the_tester_s, img_the_tester_l))
         else:
-            deck2.card_list.append(cards.TheVanilla(ft_numeric_s, ft_numeric_l,
+            deck2.card_list.append(cards.TheVanilla(opponent,
+                                                    ft_numeric_s, ft_numeric_l,
                                                     img_card_frame_s, img_card_frame_l,
                                                     img_the_vanilla_s, img_the_vanilla_l))
 
-    you = Player(deck1, hand_slots, field_slots, char_slot)
-    opponent = Player(deck2, op_hand_slots, op_field_slots, op_char_slot)
+    you.set_up_player(deck1, hand_slots, field_slots, char_slot)
+    opponent.set_up_player(deck2, op_hand_slots, op_field_slots, op_char_slot)
 
     you.set_op(opponent)
     opponent.set_op(you)
